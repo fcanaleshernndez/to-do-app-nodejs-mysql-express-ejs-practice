@@ -23,6 +23,7 @@
                 <table class="table table-striped text-center">
                     <thead>
                         <tr>
+                            <th scope="col">#</th>
                             <th scope="col">Name</th>
                             <th scope="col">Status</th>
                             <th scope="col">Actions</th>
@@ -36,13 +37,16 @@
 
                                 <tr>
                                     <td>
+                                        <%= count %>
+                                    </td>
+                                    <td>
                                         <%= data[i].name %>
                                     </td>
                                     <td>
-                                        <%= data[i].status %>
+                                        <%= data[i].status_name %>
                                     </td>
                                     <td>
-                                        <div class="btn-group" role="group">
+                                        <div class="btn-group btn-group-sm" role="group">
                                             <button type="button" class="btn btn-success"><i class="fas fa-plus-circle"></i></button>
                                             <button type="button" class="btn btn-warning"><i class="fas fa-edit"></i></button>
                                             <button type="button" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
@@ -56,6 +60,8 @@
                     </tbody>
                 </table>
             </div>
+
+
             <div class="col-md-5">
                 <div class="alert alert-success">
                     <h5 class="mb-0">ADD NEW TASK</h5>
@@ -67,26 +73,22 @@
                             <div class="row col-md-12">
 
                                 <div class="form-group">
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="addName" placeholder="Name">
-                                        <label>Name</label>
-                                    </div>
-                                    <div class="form-floating">
-                                        <textarea class="form-control" id="addDescription" placeholder="Description" style="height: 10em;"></textarea>
-                                        <label>Description</label>
-                                    </div><br>
+                                    <form action="/save" method="POST">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" name="addName" placeholder="Name" required>
+                                            <label>Name</label>
+                                        </div>
+                                        <div class="form-floating">
+                                            <textarea class="form-control" name="addDescription" placeholder="Description" style="height: 10em;" required></textarea>
+                                            <label>Description</label>
+                                        </div><br>
+                                        <input type="submit" class="btn btn-outline-secondary lead col-12" value="INSERT NEW TASK">
+                                    </form>
+
                                 </div>
-
-                                <button class="btn btn-outline-secondary lead">INSERT NEW TASK</button>
-
-
                             </div>
 
-
-
                         </div>
-
-
                     </div>
                 </div>
             </div>
