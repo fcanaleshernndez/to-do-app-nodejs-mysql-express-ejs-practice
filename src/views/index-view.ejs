@@ -20,7 +20,7 @@
 
         <div class="row">
             <div class="col-md-7">
-                <table class="table table-striped text-center">
+                <table class="table table-striped text-center table-hover">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
@@ -33,28 +33,26 @@
 
                         <% for (let i = 0; i < data.length; i++) { %>
 
-                            <% let count = 1 + i %>
+                            <tr>
+                                <td>
+                                    <%= i + 1 %>
+                                </td>
+                                <td>
+                                    <%= data[i].name %>
+                                </td>
+                                <td>
+                                    <%= data[i].status_name %>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <button type="button" class="btn btn-success"><i class="fas fa-plus-circle"></i></button>
+                                        <button type="button" class="btn btn-warning"><i class="fas fa-edit"></i></button>
+                                        <button type="button" onclick="btnEliminar('<%= data[i].idList %>')" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
 
-                                <tr>
-                                    <td>
-                                        <%= count %>
-                                    </td>
-                                    <td>
-                                        <%= data[i].name %>
-                                    </td>
-                                    <td>
-                                        <%= data[i].status_name %>
-                                    </td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm" role="group">
-                                            <button type="button" class="btn btn-success"><i class="fas fa-plus-circle"></i></button>
-                                            <button type="button" class="btn btn-warning"><i class="fas fa-edit"></i></button>
-                                            <button type="button" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <% } %>
+                            <% } %>
 
 
                     </tbody>
@@ -97,3 +95,31 @@
 
 
     <%- include('templates/footer') -%>
+
+        <script>
+            const btnEliminar = (idEliminar) => {
+
+                $.post('/delete/' + idEliminar, {
+                    id: idEliminar
+                }, (data) => {
+
+                    if (data == 'eliminado') {
+                        Swal.fire(
+                            'Perfecto!',
+                            `La tarea se ha eliminado correctamente`,
+                            'success'
+                        ).then((result) => {
+                            location.href = '/';
+                        })
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            `Ha ocurrido un error ${data}`,
+                            'error'
+                        )
+                    }
+
+                })
+
+            }
+        </script>

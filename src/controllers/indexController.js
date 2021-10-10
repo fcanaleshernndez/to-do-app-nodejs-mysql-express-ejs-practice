@@ -4,11 +4,10 @@ const controller = {};
 
 controller.list = (req, res) => {
     req.getConnection((err, conn) => {
-        conn.query("SELECT * FROM list l INNER JOIN status st on st.id = l.fk_status ORDER BY l.id ASC ", (err, users) => {
+        conn.query("SELECT *,l.id as idList FROM list l INNER JOIN status st on st.id = l.fk_status ORDER BY l.id ASC ", (err, users) => {
             if (err) {
                 res.json(err);
             }
-            console.log(users);
             res.render('index-view', {
                 data: users
             });
@@ -35,5 +34,20 @@ controller.save = (req, res) => {
 
     });
 };
+
+controller.delete = (req, res) => {
+
+    const { id } = req.params;
+
+    req.getConnection((err, conn) => {
+        conn.query("DELETE FROM list WHERE id = ?", [id], (err, rows) => {
+            if (rows) {
+                res.json('eliminado')
+            } else {
+                res.json(err);
+            }
+        });
+    })
+}
 
 module.exports = controller;
