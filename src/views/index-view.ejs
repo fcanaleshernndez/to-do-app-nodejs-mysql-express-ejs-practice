@@ -1,7 +1,5 @@
 <%- include('templates/header') -%>
 
-
-
     <div class="container-fluid">
 
         <div class="row">
@@ -46,7 +44,7 @@
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group">
                                         <button type="button" class="btn btn-success"><i class="fas fa-plus-circle"></i></button>
-                                        <button type="button" class="btn btn-warning"><i class="fas fa-edit"></i></button>
+                                        <button type="button" onclick="btnUpdate('<%= data[i].idList %>')" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-edit"></i></button>
                                         <button type="button" onclick="btnEliminar('<%= data[i].idList %>')" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
                                     </div>
                                 </td>
@@ -93,31 +91,106 @@
         </div>
     </div>
 
+    <!-- VENTANAS MODALES -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tituloModalUpdate"></h5>
+                </div>
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput" class="form-label">Name</label>
+                        <input type="text" class="form-control" name="uptName" id="updateName" placeholder="Example input placeholder">
+                    </div>
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput" class="form-label">Status</label>
+                        <select class="form-control" name="uptStatus" id="updateStatus">
+                            
+                            
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput2" class="form-label">Description</label>
+                        <input type="text" class="form-control" name="uptDescription" id="updateDescription" placeholder="Another input placeholder">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-primary">Actualizar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <%- include('templates/footer') -%>
 
         <script>
+            /* Eliminar un registro */
             const btnEliminar = (idEliminar) => {
 
-                $.post('/delete/' + idEliminar, {
-                    id: idEliminar
-                }, (data) => {
+                Swal.fire({
+                    title: 'Eliminar',
+                    text: `¿Seguro que deseas eliminar este registro?`,
+                    icon: 'question',
+                    showCancelButton: 'true',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonText: 'Si, eliminar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
 
-                    if (data == 'eliminado') {
-                        Swal.fire(
-                            'Perfecto!',
-                            `La tarea se ha eliminado correctamente`,
-                            'success'
-                        ).then((result) => {
-                            location.href = '/';
+                        $.post('/delete/' + idEliminar, {
+                            id: idEliminar
+                        }, (data) => {
+
+                            if (data == 'eliminado') {
+
+                                Swal.fire(
+                                    'Perfecto!',
+                                    `La tarea se ha eliminado correctamente`,
+                                    'success'
+                                ).then((result) => {
+                                    location.href = '/';
+                                })
+
+                            } else {
+
+                                Swal.fire(
+                                    'Error!',
+                                    `Ha ocurrido un error ${data}`,
+                                    'error'
+                                )
+                            }
                         })
-                    } else {
-                        Swal.fire(
-                            'Error!',
-                            `Ha ocurrido un error ${data}`,
-                            'error'
-                        )
                     }
+                })
+            }
+
+            /* Traer los datos para actualizar */
+            const btnUpdate = (idUpdate) => {
+
+                $.get('/getStatus/', {
+                    //Sin envío de datos
+                }, (data) => {
+                    console.log(data);
+
+                    const $select = document.querySelector('#updateStatus');
+
+                    let options = '';
+
+                    for (let i = 0; i < data.length; i++) {
+
+                        options += `<option value=${data[i].id}>${data[i].status_name}</option>`;
+
+                    }
+
+                    $select.innerHTML = options;
 
                 })
 

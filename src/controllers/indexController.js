@@ -42,10 +42,32 @@ controller.delete = (req, res) => {
     req.getConnection((err, conn) => {
         conn.query("DELETE FROM list WHERE id = ?", [id], (err, rows) => {
             if (rows) {
-                res.json('eliminado')
+                res.json('eliminado');
             } else {
                 res.json(err);
             }
+        });
+    })
+}
+
+controller.update = (req, res) => {
+
+    const { id } = req.params;
+    const dataBody = req.body;
+
+    req.getConnection((err, conn) => {
+
+        conn.query("UPDATE list SET name = ?, description = ?, fk_status= ? WHERE id = ?", [dataBody.uptName, dataBody.uptDescription, dataBody.fk_status, id], (err, rows) => {
+            res.json("actualizado");
+        });
+
+    })
+}
+
+controller.getStatus = (req, res) => {
+    req.getConnection((err, conn) => {
+        conn.query("SELECT * FROM status", (err, status) => {
+            res.json(status)
         });
     })
 }
